@@ -24,29 +24,28 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Registrar Bibliotecário</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nome</label>
-          <br />
-          <input value={name} onChange={(e) => setName(e.target.value)} />
-        </div>
-        <div>
-          <label>Email</label>
-          <br />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div>
-          <label>Senha</label>
-          <br />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <button type="submit">Registrar</button>
-        </div>
-      </form>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+    <div className="container">
+      <div className="card" style={{ maxWidth: 520, margin: '0 auto' }}>
+        <h1>Registrar</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <label>Nome</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div className="form-row">
+            <label>Email</label>
+            <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div className="form-row">
+            <label>Senha</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          <div style={{ marginTop: 8 }}>
+            <button className="btn" type="submit">Registrar</button>
+          </div>
+        </form>
+        {error && <div className="error">{error}</div>}
+      </div>
     </div>
   );
 }

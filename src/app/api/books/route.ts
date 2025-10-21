@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { listBooks, createBook } from '../../../controllers/booksController';
 import { requireAdmin } from '../../../lib/auth';
+import { validateBook } from '../../../lib/validate';
 
 export async function GET(request: Request) {
   try {
@@ -21,6 +22,8 @@ export async function POST(request: Request) {
   try {
     requireAdmin(request);
     const body = await request.json();
+    const err = validateBook(body);
+    if (err) return NextResponse.json({ error: err }, { status: 400 });
     const book = await createBook(body);
     return NextResponse.json({ data: book }, { status: 201 });
   } catch (err: any) {

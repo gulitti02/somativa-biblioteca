@@ -7,6 +7,7 @@ type Member = { _id: string; name: string; email?: string; phone?: string; membe
 
 export default function MembersPage() {
   const [members, setMembers] = useState<Member[]>([]);
+  const [user, setUser] = useState<any>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [memberId, setMemberId] = useState('');
@@ -23,6 +24,8 @@ export default function MembersPage() {
   }
 
   useEffect(() => {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+    if (raw) setUser(JSON.parse(raw));
     fetchMembers();
   }, []);
 
@@ -56,9 +59,11 @@ export default function MembersPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
+    <div className="container">
+      <div className="card">
       <h1>Membros</h1>
-      <form onSubmit={handleCreate} style={{ marginBottom: 20 }}>
+      {user?.role === 'admin' && (
+        <form onSubmit={handleCreate} style={{ marginBottom: 20 }}>
         <div>
           <label>Nome</label><br />
           <input value={name} onChange={(e) => setName(e.target.value)} />
@@ -71,20 +76,22 @@ export default function MembersPage() {
           <label>Código (memberId)</label><br />
           <input value={memberId} onChange={(e) => setMemberId(e.target.value)} />
         </div>
-        <div style={{ marginTop: 8 }}>
-          <button type="submit">Criar Membro</button>
-        </div>
-      </form>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+          <div style={{ marginTop: 8 }}>
+            <button className="btn" type="submit">Criar Membro</button>
+          </div>
+        </form>
+    )}
+      {error && <div className="error">{error}</div>}
 
       <ul>
         {members.map(m => (
-          <li key={m._id}>{m.name} — {m.memberId} — {m.email || '—'} <button onClick={() => handleDelete(m._id)}>Deletar</button></li>
+          <li key={m._id}>{m.name} — <span className="muted">{m.memberId}</span> — {m.email || '—'} {user?.role === 'admin' ? <button className="btn" style={{ marginLeft: 8 }} onClick={() => handleDelete(m._id)}>Deletar</button> : null}</li>
         ))}
       </ul>
 
       <div style={{ marginTop: 16 }}>
         <Link href="/">← Voltar</Link>
+      </div>
       </div>
     </div>
   );

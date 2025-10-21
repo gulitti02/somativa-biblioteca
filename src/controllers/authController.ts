@@ -12,7 +12,7 @@ export async function registerUser(payload: any) {
   const exists = await User.findOne({ email });
   if (exists) throw new Error('Email already registered');
   const hash = await bcrypt.hash(password, 10);
-  const user = await User.create({ name, email, password: hash, role: role || 'admin' });
+  const user = await User.create({ name, email, password: hash, role: role || 'member' });
   return { id: user._id, name: user.name, email: user.email, role: user.role };
 }
 

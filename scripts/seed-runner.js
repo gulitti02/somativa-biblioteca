@@ -49,10 +49,13 @@ async function run() {
     { name: 'João Souza', email: 'joao@example.com', memberId: 'M0002' }
   ]);
 
-  const hash = await bcrypt.hash('admin123', 10);
-  const user = await User.create({ name: 'Admin', email: 'admin@example.com', password: hash, role: 'admin' });
+  const hashAdmin = await bcrypt.hash('admin123', 10);
+  const admin = await User.create({ name: 'Admin', email: 'admin@example.com', password: hashAdmin, role: 'admin' });
 
-  console.log({ ok: true, books: books.length, members: members.length, admin: user.email });
+  const hashMember = await bcrypt.hash('member123', 10);
+  const memberUser = await User.create({ name: 'Carlos Membro', email: 'carlos@example.com', password: hashMember, role: 'member' });
+
+  console.log({ ok: true, books: books.length, members: members.length, admin: admin.email, member: memberUser.email });
   await mongoose.disconnect();
 }
 

@@ -1,6 +1,9 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6fbff;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --foreground: #0f172a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,6 +32,49 @@ body {
   padding: 0;
   margin: 0;
 }
+
+/* Layout */
+.container {
+  max-width: 980px;
+  margin: 28px auto;
+  padding: 20px;
+}
+
+header.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  padding: 12px 20px;
+  box-shadow: 0 2px 6px rgba(16,24,40,0.05);
+  border-radius: 8px;
+}
+
+.nav-links { display:flex; gap:12px; align-items:center }
+.nav-links a { color: var(--muted); font-weight: 600 }
+.user-badge { margin-left: 8px; padding: 6px 10px; background: rgba(37,99,235,0.08); color: var(--accent); border-radius: 999px; font-weight:600 }
+
+/* Cards */
+.card { background: var(--card); padding: 18px; border-radius: 10px; box-shadow: 0 2px 8px rgba(16,24,40,0.04); }
+
+/* Forms */
+.form-row { margin-bottom: 12px }
+label { font-size: 14px; color: var(--muted); }
+input, select, textarea { width:100%; padding:10px 12px; margin-top:6px; border-radius:8px; border:1px solid #e6edf7; background:transparent }
+
+.btn { display:inline-block; padding:8px 12px; background:var(--accent); color:white; border-radius:8px; border:none; cursor:pointer; font-weight:600 }
+.btn.ghost { background:transparent; color:var(--accent); border:1px solid rgba(37,99,235,0.15) }
+
+/* Tables */
+table { width:100%; border-collapse:collapse }
+th, td { padding:10px 8px; text-align:left }
+thead th { color:var(--muted); font-size:13px; border-bottom:1px solid #eef3fb }
+tbody tr { border-bottom: 1px solid #f2f6fb }
+
+.muted { color: var(--muted) }
+
+.error { color: #b91c1c }
+
 
 a {
   color: inherit;

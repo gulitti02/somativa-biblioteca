@@ -12,6 +12,7 @@ type Book = {
 };
 
 export default function BooksPage() {
+  const [user, setUser] = useState<any>(null);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -25,11 +26,9 @@ export default function BooksPage() {
     try {
       const res = await fetch('/api/books');
       if (!res.ok) throw new Error('Erro ao carregar livros');
-    const payload = await res.json();
-    // API may return { data: [...] } or directly an array
-    const list = Array.isArray(payload) ? payload : payload.data || [];
-    setBooks(list);
-      // above fallback is defensive: API may return either {data: [...]} or [...]
+      const payload = await res.json();
+      const list = Array.isArray(payload) ? payload : payload.data || [];
+      setBooks(list);
     } catch (err: any) {
       setError(err.message || String(err));
     } finally {
@@ -52,6 +51,8 @@ export default function BooksPage() {
   }
 
   useEffect(() => {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+    if (raw) setUser(JSON.parse(raw));
     fetchBooks();
   }, []);
 
@@ -83,72 +84,68 @@ export default function BooksPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Acervo (Livros)</h1>
-      <p>Gerencie livros: crie e veja a lista. (backend: /api/books)</p>
+    <div className="container">
+      <div className="card">
+        <h1>Acervo (Livros)</h1>
+        <p className="muted">Gerencie livros: crie e veja a lista. (backend: /api/books)</p>
 
-      <form onSubmit={handleCreate} style={{ marginBottom: 20 }}>
-        <div>
-          <label>Título</label>
-          <br />
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </div>
-        <div>
-          <label>Autor</label>
-          <br />
-          <input value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          <label>ISBN</label>
-          <br />
-          <input value={isbn} onChange={(e) => setIsbn(e.target.value)} />
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <button type="submit">Criar Livro</button>
-        </div>
-      </form>
-
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-
-      {loading ? (
-        <div>Carregando...</div>
-      ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Título</th>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Autor</th>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>ISBN</th>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {books.length === 0 && (
-              <tr>
-                <td colSpan={4}>Nenhum livro cadastrado.</td>
-              </tr>
-            )}
-            {books.map((b) => (
-                <tr key={b._id}>
-                  <td style={{ padding: '8px 0' }}>{b.title}</td>
-                  <td style={{ padding: '8px 0' }}>{b.author}</td>
-                  <td style={{ padding: '8px 0' }}>{b.isbn || '—'}</td>
-                  <td style={{ padding: '8px 0' }}>{b.status || '—'}</td>
-                  <td style={{ padding: '8px 0' }}><button onClick={() => handleDelete(b._id)}>Deletar</button></td>
-                </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      <div style={{ marginTop: 16 }}>
-        {typeof window !== 'undefined' && !localStorage.getItem('token') ? (
-          <>
-            <Link href="/auth/login">Login</Link> • <Link href="/auth/register">Registrar</Link>
-          </>
-        ) : (
-          <Link href="/">← Voltar</Link>
+        {user?.role === 'admin' && (
+          <form onSubmit={handleCreate} style={{ marginBottom: 20 }}>
+            <div className="form-row">
+              <label>Título</label>
+              <input value={title} onChange={(e) => setTitle(e.target.value)} />
+            </div>
+            <div className="form-row">
+              <label>Autor</label>
+              <input value={author} onChange={(e) => setAuthor(e.target.value)} />
+            </div>
+            <div className="form-row">
+              <label>ISBN</label>
+              <input value={isbn} onChange={(e) => setIsbn(e.target.value)} />
+            </div>
+            <div style={{ marginTop: 8 }}>
+              <button className="btn" type="submit">Criar Livro</button>
+            </div>
+          </form>
         )}
+
+        {error && <div className="error">{error}</div>}
+
+        {loading ? (
+          <div>Carregando...</div>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>ISBN</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {books.length === 0 && (
+                <tr>
+                  <td colSpan={5}>Nenhum livro cadastrado.</td>
+                </tr>
+              )}
+              {books.map((b) => (
+                <tr key={b._id}>
+                  <td>{b.title}</td>
+                  <td>{b.author}</td>
+                  <td>{b.isbn || '—'}</td>
+                  <td>{b.status || '—'}</td>
+                  <td>{user?.role === 'admin' ? <button className="btn" onClick={() => handleDelete(b._id)}>Deletar</button> : '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        <div style={{ marginTop: 16 }}>
+          <Link href="/">← Voltar</Link>
+        </div>
       </div>
     </div>
   );

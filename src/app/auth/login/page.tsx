@@ -26,24 +26,24 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Login Bibliotecário</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <br />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div>
-          <label>Senha</label>
-          <br />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <button type="submit">Entrar</button>
-        </div>
-      </form>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+    <div className="container">
+      <div className="card" style={{ maxWidth: 520, margin: '0 auto' }}>
+        <h1>Entrar</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <label>Email</label>
+            <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div className="form-row">
+            <label>Senha</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          <div style={{ marginTop: 8 }}>
+            <button className="btn" type="submit">Entrar</button>
+          </div>
+        </form>
+        {error && <div className="error">{error}</div>}
+      </div>
     </div>
   );
 }

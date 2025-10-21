@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { listLoans, createLoan } from '../../../controllers/loansController';
-import { requireAdmin } from '../../../lib/auth';
+import { requireAdmin, requireAuth } from '../../../lib/auth';
+import { validateLoan } from '../../../lib/validate';
 
 export async function GET(request: Request) {
   try {
@@ -16,8 +17,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    requireAdmin(request);
+    // allow any authenticated user (member or admin) to create a loan
+    const user = requireAuth(request);
     const body = await request.json();
+    const err = validateLoan(body);
+    if (err) return NextResponse.json({ error: err }, { status: 400 });
+    // attach requester info for auditing if needed
+    body.requestedBy = user.sub;
     const loan = await createLoan(body);
     return NextResponse.json({ data: loan }, { status: 201 });
   } catch (err: any) {

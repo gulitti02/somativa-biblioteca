@@ -4,7 +4,9 @@ import { requireAdmin } from '../../../../lib/auth';
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const book = await getBook(params.id);
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop();
+    const book = await getBook(id || '');
     if (!book) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ data: book });
   } catch (err: any) {
@@ -16,7 +18,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     requireAdmin(request);
     const body = await request.json();
-    const book = await updateBook(params.id, body);
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop();
+    const book = await updateBook(id || '', body);
     if (!book) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ data: book });
   } catch (err: any) {
@@ -27,7 +31,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     requireAdmin(request);
-    const ok = await deleteBook(params.id);
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop();
+    const ok = await deleteBook(id || '');
     if (!ok) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({}, { status: 204 });
   } catch (err: any) {

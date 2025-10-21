@@ -25,6 +25,12 @@ export function verifyToken(request: Request): JwtUser | null {
   }
 }
 
+export function requireAuth(request: Request) {
+  const user = verifyToken(request);
+  if (!user) throw new Error('Unauthorized');
+  return user;
+}
+
 export function requireAdmin(request: Request) {
   const user = verifyToken(request);
   if (!user) throw new Error('Unauthorized');
