@@ -1,5 +1,7 @@
 # SGM - Biblioteca Comunitária "Ler é Viver" (MVP)
 
+## LINK FIGMA : https://www.figma.com/design/IKbNiOEsemwKvfTEvQKiFC/somoativa_biblioteca?node-id=0-1&p=f&t=xE5iUVtE38KnDbP9-0
+
 Este repositório contém um projeto-base em Next.js (App Router) preparado para ser adaptado como um MVP de um Sistema de Gerenciamento de Biblioteca para a "Biblioteca Comunitária Ler é Viver".
 
 O arquivo a seguir documenta em detalhes o escopo do MVP, modelagem de dados, rotas API, contratos (request/response), fluxos de uso, plano de testes, preocupações de segurança, roteiro de implementação, checklist de apresentação e sugestões de melhorias/bônus.
