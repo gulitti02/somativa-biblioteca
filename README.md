@@ -167,7 +167,7 @@ Os exemplos seguem a convenção JSON e usam rotas no padrão REST. Implementaç
 
 ## Exemplo de payloads (cURL)
 
-Abaixo alguns exemplos para testar rapidamente via terminal (ajuste URL/local). Não execute aqui — são exemplos que você pode rodar localmente quando a API estiver pronta.
+Abaixo alguns exemplos para testar rapidamente via terminal (ajuste URL/local). 
 
 - Criar livro
 
@@ -213,7 +213,7 @@ curl -X POST http://localhost:3000/api/loans/<LOAN_ID>/return \
 
 ## Considerações de UI/Componentes (Frontend)
 
-Páginas sugeridas (App Router):
+Páginas (App Router):
 
 - `app/books/page.tsx` -> Lista + botão criar
 - `app/books/new/page.tsx` -> Formulário de criação
@@ -228,7 +228,7 @@ Componentes reutilizáveis
 - `components/LoanForm.tsx`
 
 Arquitetura de estilos
-- Use CSS Modules ou SCSS global (`src/app/globals.css` já existe no template).
+- Usei CSS Modules e SCSS global (`src/app/globals.css`).
 - Crie um `src/styles` para variáveis, mixins e componentes.
 
 Acessibilidade e usabilidade
@@ -237,7 +237,7 @@ Acessibilidade e usabilidade
 
 ---
 
-## Plano de testes (mínimo recomendado)
+## Plano de testes
 
 - Testes unitários para validadores e helpers.
 - Testes de integração para rotas API usando `supertest` + in-memory Mongo (mongodb-memory-server) ou um banco de teste.
@@ -258,17 +258,6 @@ Casos de teste essenciais:
 - Validação de entrada: usar `zod` ou `yup` para validar os corpos das requisições.
 - Sanitização: evitar injeção ao exibir dados; usar escape onde necessário.
 - Proteção contra remoção acidental: impedir exclusão de livros com Loan ativo.
-
----
-
-## Riscos e mitigação (análise rápida)
-
-1. Risco: Dados inconsistentes (emprestar livro já emprestado)
-   - Mitigação: checagem atômica e validação antes de criar Loan; se possível usar transação (MongoDB Replica Set/Atlas) para criar Loan + atualizar Book em uma operação atômica.
-2. Risco: Falta de autenticação (uso indevido)
-   - Mitigação: ao menos proteger rotas de escrita com JWT e senha forte; para MVP, pode ser usuário único (bibliotecário) configurado via env.
-3. Risco: Falta de backup
-   - Mitigação: instruir uso de backup do MongoDB (Atlas ou dumps regulares).
 
 ---
 
@@ -309,17 +298,6 @@ Checklist de deploy
 
 ---
 
-## Métricas e relatórios simples (opcional)
-
-Relatórios que podem agregar valor:
-- Número de empréstimos por mês
-- Percentual de devoluções em atraso
-- Top 10 livros mais emprestados
-
-Esses relatórios podem ser implementados como endpoints agregados (MongoDB Aggregation Framework).
-
----
-
 ## Guia rápido de desenvolvimento local
 
 1. Clone o repositório
@@ -352,36 +330,10 @@ npm run dev
 
 ## Checklist de apresentação (demo)
 
-- [ ] Criar pelo menos 3 livros
-- [ ] Criar 2 membros
-- [ ] Registrar 2 empréstimos (um vencido)
-- [ ] Demonstrar a listagem de atrasados
-- [ ] Explicar a modelagem e como a integridade do status do livro é garantida
+- [V] Criar pelo menos 3 livros
+- [V] Criar 2 membros
+- [V] Registrar 2 empréstimos (um vencido)
+- [V] Demonstrar a listagem de atrasados
+- [V] Explicar a modelagem e como a integridade do status do livro é garantida
 
 ---
-
-## Próximos passos (posso implementar agora)
-
-Posso começar pela criação dos seguintes arquivos nesta ordem:
-
-1. `src/lib/mongodb.ts` – utilitário de conexão com MongoDB (reutilizável em API routes e scripts).
-2. `src/models/Book.ts` – modelo Mongoose para livros.
-3. `src/models/Member.ts` – modelo Mongoose para membros.
-4. `src/models/Loan.ts` – modelo Mongoose para empréstimos.
-5. Rotas API: `src/app/api/books/route.ts`, `src/app/api/members/route.ts`, `src/app/api/loans/route.ts` (App Router).
-6. Páginas frontend básicas em `app/books`, `app/members`, `app/loans`.
-
-Se preferir, começo criando apenas os modelos e as rotas básicas de Books para você revisar. O que prefere que eu faça primeiro?
-
----
-
-## Anexos técnicos (boas práticas rápidas)
-
-- Use `try/catch` em handlers de API e retornar status HTTP apropriados (400, 404, 500).
-- Centralizar mensagens de erro e validações para melhorar manutenção.
-- Para operações que alteram múltiplos documentos (criar Loan + atualizar Book), considere transação ou checagem dupla seguido de rollback lógico em caso de falha.
-- Evite expor `_id` sensíveis em logs públicos; usar `memberId` legível para integração com papelaria/local.
-
----
-
-Obrigado — se desejar, prossigo e implemento os modelos Mongoose primeiro (arquivos e testes mínimos). Indique qual etapa iniciar e eu começo a aplicar as alterações no código fonte do projeto.
